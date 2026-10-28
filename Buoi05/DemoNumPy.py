@@ -19,3 +19,7 @@ print("Min:", np.min(scores))
 # Tìm các diem > 7.0
 score_above_7 = scores[scores >= 7]
 print(score_above_7)
+
+# Thay thế các giá trị ko hợp lệ (<0, > 10) ==> NaN
+scores[(scores < 0) | (scores > 10)] = np.nan
+print(scores)
