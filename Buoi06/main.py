@@ -1,5 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 import json
+import os
+import shutil
 
 app = FastAPI()
 
@@ -51,3 +53,16 @@ def create_new_student(model: Student):
             status_code=400,
             detail=f"Item {model.id}-{model.name} is existed."
         )
+    
+
+DIRECTORY = os.getcwd()
+@app.post("/images", tags=["UPLOAD"])
+def upload_single_file(image: UploadFile = File(...)):
+    try:
+        file_save = os.path.join(DIRECTORY, "data", image.filename)
+        with open(file_save, "wb") as tmp:
+            shutil.copyfileobj(image.file, tmp)
+        return {"filename": image.filename}
+    except Exception as e:
+        print(e)
+        return {"success": False}
